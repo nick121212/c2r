@@ -1,0 +1,3 @@
+#!/usr/bin/env node
+
+require('../libs/c2r.js');

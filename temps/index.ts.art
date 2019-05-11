@@ -1,0 +1,62 @@
+import {IInterfaceModelCommon} from "modelproxy/out/models/interface";
+import {ModelProxy, BaseFactory} from "modelproxy";
+import deepMerge from "deepmerge";
+
+import {proxy} from "{{mpPath}}";
+import config from "./{{key}}.json";
+import * as api from "./{{key}}.d";
+
+const capitalize = (str: string) => {
+	// get the inner Text and turn it into an array, spliting all the spaces
+	let text = str.split(' '),
+		// result string
+		result = '';
+
+	// for every element of the new Text array
+	text.forEach((word) => {
+		// get the first letter
+		const firstLetter = word.slice(0, 1),
+			// and all remaining letters
+			remaining = word.slice(1);
+		// then simply use toUpperCase() on 
+		// the first letter and add back the remaining part, also
+		// add a space to the end of the string
+		result += firstLetter.toUpperCase() + remaining + ' ';
+	});
+
+	// return the result, this way it can also be easily logged using console.log()
+	return result.replace(/(^\s*)|(\s*$)/g, "");    
+}
+
+const generatePathObject = (i: IInterfaceModelCommon<any>) => {
+	const paths = (i.path || "").split("/");
+	const map: any = {};
+	let curMap: any = map;
+
+	for (let i = 0, n = paths.length; i < n; i++) {
+		const p = capitalize(paths[i]);
+
+		if (p) {
+			curMap[p] = {};
+			curMap = curMap[p];
+		}
+	}
+
+	Object.assign(curMap, i);
+
+	return map;
+};
+
+const generate = (mProxy: ModelProxy): api.{{key}} => {
+	let map: any = {};
+
+	mProxy.forEach((key: string, i: BaseFactory<any>) => {
+		i.forEach((key1: string, i: IInterfaceModelCommon<any>) => {
+			map = deepMerge(map, generatePathObject(i));
+		});
+	});
+
+	return map as api.{{key}};
+}
+
+export const {{key}} =  generate(proxy.loadConfig(config));
