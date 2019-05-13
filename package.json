@@ -1,6 +1,6 @@
 {
     "name": "c2r",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "rap数据自动生成modelproxy格式文件",
     "main": "libs/c2r.js",
     "scripts": {

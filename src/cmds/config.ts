@@ -21,7 +21,8 @@ export default async (configPath: string) => {
 				productId: p.productId,
 				config: p.config,
 				rapPath: p.rapPath || config.rapPath,
-				mpPath: config.mpPath
+				mpPath: config.mpPath,
+				tempPath: config.tempPath
 			}).then((d) => {
 				console.log(d);
 			});

@@ -17,6 +17,7 @@ export interface CreateModel {
 	config: string;
 	rapPath: string;
 	mpPath: string;
+	tempPath: string;
 }
 
 export default async (source: string, info: CreateModel) => {
@@ -26,7 +27,7 @@ export default async (source: string, info: CreateModel) => {
 		throw new Error("没有发现对应的源！");
 	}
 
-	const {productId, nameSpace, path, config, rapPath, mpPath} = info;
+	const {productId, nameSpace, path, config, rapPath, mpPath, tempPath} = info;
 	const finalPath = (ext: string) => nodePath.join(path, `${nameSpace}.${ext}`);
 
 	console.log(chalk.cyanBright("开始处理..."));
@@ -68,7 +69,7 @@ export default async (source: string, info: CreateModel) => {
 
 		fs.writeFileSync(finalPath("d.ts"), api);
 		fs.writeFileSync(finalPath("json"), JSON.stringify(d));
-		fs.writeFileSync(finalPath("ts"), template(`${__dirname}/../../temps/index.ts.art`, {
+		fs.writeFileSync(finalPath("ts"), template(tempPath || `${__dirname}/../../temps/index.ts.art`, {
 			mpPath: mpPath,
 			key: nameSpace
 		}));
